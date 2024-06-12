@@ -1,22 +1,23 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useHistory } from 'react-router-dom';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Alert from '@mui/material/Alert';
+import { useNavigate } from 'react-router-dom';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const history = useHistory();
+  // const history = useHistory();
+  const navigate = useNavigate(); // Move the useNavigate hook outside of the handleLogin function
 
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
       const response = await axios.post('/api/login', { email, password });
       localStorage.setItem('token', response.data.token);
-      history.push('/dashboard');
+      navigate('/dashboard'); // Use the navigate function directly
     } catch (err) {
       setError('Invalid email or password');
     }

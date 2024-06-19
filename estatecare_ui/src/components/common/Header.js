@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import HomeIcon from '@mui/icons-material/Home';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import PropertyIcon from '@mui/icons-material/List';
@@ -9,11 +9,11 @@ import LogoutIcon from '@mui/icons-material/Logout';
 
 
 const Header = () => {
-    const location = useLocation();
-    // Don't render the NavBar on the login page
-    if (location.pathname === '/login') {
-        return null;
-    }
+    // const location = useLocation();
+    // // Don't render the NavBar on the login page
+    // if (location.pathname === '/login') {
+    //     return null;
+    // }
 
     return (
         <nav className="fixed top-0 left-0 right-0 flex items-center justify-between p-4 bg-blue-500">

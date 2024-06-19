@@ -1,14 +1,11 @@
 import React from 'react';
-import { Route, Navigate, useLocation } from 'react-router-dom';
+import { Route, Navigate } from 'react-router-dom';
 
-const PrivateRoute = ({ children, ...rest }) => {
+const PrivateRoute = ({ path, element }) => {
   const isAuthenticated = !!localStorage.getItem('token');
-  const location = useLocation();
 
-  return isAuthenticated ? (
-    <Route {...rest}>{children}</Route>
-  ) : (
-    <Navigate to="/login" replace state={{ from: location }} />
+  return (
+    <Route path={path} element={isAuthenticated ? element : <Navigate to="/login" replace />} />
   );
 };
 

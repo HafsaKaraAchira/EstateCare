@@ -43,7 +43,7 @@ function CarouselItem(props) {
           // textAlign: 'center', // Center the text horizontally
         }}
       >
-        <Typography variant="h7" component="div" 
+        <Typography variant="h8" component="div" 
           sx={{ 
             height: '100%', 
             fontSize: {

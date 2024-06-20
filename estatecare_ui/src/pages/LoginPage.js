@@ -1,84 +1,72 @@
 import React from 'react';
-import { Grid, CssBaseline, Paper, Typography } from '@mui/material';
-import { ThemeProvider } from '@mui/material/styles';
-import defaultTheme from '../styles/theme.js';
+import { Grid, CssBaseline, Paper, Typography, Card, CardMedia, CardContent } from '@mui/material';
+// import { ThemeProvider } from '@mui/material/styles';
+// import defaultTheme from '../styles/theme.js';
 import LoginForm from '../components/authentication/LoginForm';
 import Carousel from 'react-material-ui-carousel';
-// import { AutoRotatingCarousel, Slide } from 'material-auto-rotating-carousel';
-// import SwipeableViews from 'react-swipeable-views';
-// import Slider from 'react-slick';
-// import "slick-carousel/slick/slick.css"; 
-// import "slick-carousel/slick/slick-theme.css";
-// import { FaArrowRight, FaArrowLeft } from 'react-icons/fa';
+import { useTheme } from '@mui/material/styles';
 
 
-function Item(props) {
+function CarouselItem(props) {
   return (
-    <Paper key={props.key} className="carousel-item">
-      <img src={props.item.image} alt={props.item.label} className="carousel-image" />
-      <Typography className="carousel-label" variant="h5">
-        {props.item.label}
-      </Typography>
-    </Paper>
-  )
+    <Card elevation={0} 
+      sx={{ 
+        position: 'absolute', // Position the card absolutely
+        top: '0', // Anchor the card to the top of the carousel
+        bottom: '7%', // Anchor the card to the bottom of the carousel
+        width: '100%', // Ensure the card fills the carousel
+        m: '0 auto', // Center the card horizontally
+        padding: '0% 3%', // Add padding around the card
+        bgcolor: 'transparent', // Make the card background transparent
+      }}
+    >
+      <CardMedia
+        component="img"
+        image={props.item.image}
+        alt={props.key}
+        sx={{ 
+          height: '90%', 
+          width: '100%', // Ensure the width adjusts to the card's width
+          objectFit: 'contain', // Maintain aspect ratio and fit within the given height
+          maxWidth:'fit-content'
+        }}
+      />
+      <CardContent 
+        sx={{ 
+          height: '20%',
+          position: 'absolute', // Position the content absolutely
+          bottom: '0%', // Anchor the content to the bottom of the card
+          margin: '0 auto', // Center the content horizontally
+          paddingTop: '5%', // Add padding to the top of the content
+          left: '5%', // Center the dots horizontally
+          right: '5%', // Center the dots horizontally
+          // textAlign: 'center', // Center the text horizontally
+        }}
+      >
+        <Typography variant="h7" component="div" 
+          sx={{ 
+            height: '100%', 
+            fontSize: {
+              xs: '0.75rem', // for extra-small devices
+              sm: '0.875rem', // for small devices
+              md: '1rem', // for medium devices
+              lg: '1.125rem', // for large devices
+              xl: '1.25rem', // for extra-large devices
+            },
+            // display: 'flex', 
+            // alignItems: 'center', 
+            // textAlign: 'center',
+          }}
+        >
+          {props.item.label}
+        </Typography>
+      </CardContent>
+    </Card>
+  );
 }
 
-// const NextArrow = ({ onClick }) => {
-//   return (
-//     <div className="absolute top-1/2 -right-8 transform -translate-y-1/2 bg-primary text-white p-2 cursor-pointer rounded-full" onClick={onClick}>
-//       <FaArrowRight />
-//     </div>
-//   );
-// };
-
-// const PrevArrow = ({ onClick }) => {
-//   return (
-//     <div className="absolute top-1/2 -left-8 transform -translate-y-1/2 bg-primary text-white p-2 cursor-pointer rounded-full" onClick={onClick}>
-//       <FaArrowLeft />
-//     </div>
-//   );
-// };
-
-
 const LoginPage = () => {
-
-  // const [currentSlide, setCurrentSlide] = useState(0);
-  // const [open, setOpen] = useState(true);
-
-  // const images =[
-  //   require(`../assets/login_slider/real-estate-desktop.svg`).default,
-  //   require(`../assets/login_slider/real-estate-dashboard.svg`).default,
-  //   require(`../assets/login_slider/real-estate-scheduling.svg`).default,
-  //   require(`../assets/login_slider/real-estate-reporting.svg`).default,
-  // ];
-
-  // const legends = [
-  //   'Effortless Properties Management at Your Fingertips.',
-  //   'Interactive Dashboards for Maximum Control, All Your Data, Beautifully Organized.',
-  //   'Efficient Scheduling for Every Property.',
-  //   'Performance Metrics at a Glance',
-  // ]
-
-  // const settings = {
-  //   nextArrow: <NextArrow />,
-  //   prevArrow: <PrevArrow />,
-  //   dots: true,
-  //   customPaging: i => (
-  //     <div
-  //       className={`cursor-pointer ${i === currentSlide ? 'w-6 h-4 mr-4 bg-secondary rounded-lg' : 'w-4 h-4 bg-gray-400 rounded-full hover:bg-gray-700'}`}
-  //     ></div>
-  //   ),
-  //   dotsClass: "slick-dots flex justify-center items-center space-x-2 mt-4",
-  //   infinite: true,
-  //   speed: 700,
-  //   slidesToShow: 1,
-  //   slidesToScroll: 1,
-  //   autoplay: true,
-  //   autoplaySpeed: 2000,
-  //   beforeChange: (current, next) => setCurrentSlide(next),
-  // };
-
-  // const [open, setOpen] = useState(true);
+  const theme = useTheme();
 
   const items = [
     {
@@ -100,7 +88,7 @@ const LoginPage = () => {
   ];
 
   return (
-    <ThemeProvider theme={defaultTheme}>
+    // <ThemeProvider theme={defaultTheme}>
       <Grid container component="main" sx={{ height: '100vh' }}>
         <CssBaseline />
         <Grid
@@ -114,62 +102,61 @@ const LoginPage = () => {
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             height: '100vh',
-            p: '7%',
-            // display: 'flex',
-            // alignItems: 'center',
-            // position: 'relative', // Add this line
-            // overflow: 'hidden',
-            // justifyContent: 'center',
-            // flexDirection: 'column',
+            display: 'flex', // Use flexbox layout
+            flexGrow: 1, // Grow to fill the container
+            flexShrink: 0, // Prevent the card from shrinking
+            justifyContent: 'center', // Center the carousel horizontally
+            alignItems: 'flex-end', // Anchor the carousel to the bottom
+            p: '3% 5%', // Add padding around the carousel
+            // paddingBottom: '5%', // 5% from the bottom of the wrapper grid
           }}
         >
-          <Carousel>
-            {
-              items.map((item, index) => <Item key={index} item={item} />)
-            }
-          </Carousel>
-          {/* <Slider {...settings} 
-            sx={{
-              // width: '80%', 
-              // height: '10%',
-              // alignSelf: 'center' // Add this line
-              // position: 'absolute', 
-              // top: '50%', 
-              // left: '50%', 
-              // transform: 'translate(-100%, -100%)' 
+          <Carousel
+            autoPlay={true} // Enable autoplay
+            interval={1000} // Set the interval to 1s
+            sx={{ 
+              height: '100%', 
+              width:'100%',
+             }} // Increase the height of the carousel
+            navButtonsProps={{
+              style: {
+                // backgroundColor: 'primary.main', // Change the arrow background color
+                color: theme.palette.primary.dark, // Change the arrow color
+              },
+            }}
+            navButtonsWrapperProps={{
+              style: {
+                bottom: '0', // Move the arrows to the bottom
+                top: 'unset',
+              },
+            }}
+            indicatorIconButtonProps={{
+              style: {
+                padding: '16px', // Add padding to the dots
+                width: '24px', // Increase the width of each dot
+                height: '24px', // Increase the height of each dot
+                color: theme.palette.primary.dark, // Change the dot color with transparency
+                //backgroundColor: theme.palette.primary.dark, // Change the dot color with transparency
+              },
+            }}
+            activeIndicatorIconButtonProps={{
+              style: {
+                //backgroundColor: theme.palette.secondary.main, // Change the active dot color
+                color: theme.palette.secondary.main, // Change the active dot color
+              },
+            }}
+            indicatorContainerProps={{
+              style: {
+                position: 'absolute', // Position the dots absolutely
+                bottom: '0', // Anchor the dots to the bottom of the carousel
+                left: '50%', // Center the dots horizontally
+                transform: 'translateX(-50%)', // Ensure the dots are centered
+                mt: '20%', // Push the dots down from the carousel
+              },
             }}
           >
-            {images.map((image, index) => (
-              <div key={index} 
-                sx={{ 
-                  textAlign: 'center',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-              >
-                <img src={image} alt="" 
-                  sx={{ 
-                    maxWidth: '80%', 
-                    // maxHeight: 'fit-content',
-                  }} 
-                />
-                <Typography
-                  component="h2"
-                  variant="h7"
-                  sx={{
-                    fontSize: '1.2rem',
-                    margin: '1rem' ,
-                    // marginTop: '1rem' ,
-                    textAlign: 'center',
-                  }}
-                >
-                  {legends[index]}
-                </Typography>
-              </div>
-            ))}
-          </Slider> */}
+            {items.map((item, index) => <CarouselItem key={index} item={item} />)}
+          </Carousel>
         </Grid>
         <Grid
           item
@@ -180,6 +167,7 @@ const LoginPage = () => {
           elevation={6}
           square
           sx={{
+            height: '100vh',
             backgroundColor: (t) => t.palette.background.dark,
             display: 'flex',
             flexDirection: 'column',
@@ -191,7 +179,7 @@ const LoginPage = () => {
           <LoginForm />
         </Grid>
       </Grid>
-    </ThemeProvider>
+    // </ThemeProvider>
   );
 };
 

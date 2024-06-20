@@ -38,10 +38,11 @@ const LoginForm = () => {
         <Grid item xs='auto' sm='auto' md='auto' component={Paper} elevation={6}
             sx={{
                 backgroundColor: 'white',
-                padding: '5% 10%',
+                padding: '7% 10%',
                 display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'center',
+                maxHeight: '100%',
                 height: 'fit-content',
                 maxWidth: '90%',
                 borderRadius: '1rem',

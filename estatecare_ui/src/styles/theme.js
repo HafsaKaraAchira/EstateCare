@@ -1,7 +1,7 @@
 // src/theme.js
-import { createTheme } from '@mui/material/styles';
+import { createTheme,  responsiveFontSizes } from '@mui/material/styles';
 
-const theme = createTheme({
+let theme = createTheme({
   typography: {
     fontFamily: 'Poppins, Arial, sans-serif',
   },
@@ -48,5 +48,12 @@ const theme = createTheme({
     },
   },
 });
+
+theme = responsiveFontSizes(theme,
+  {
+    breakpoints: ['xs', 'sm', 'md', 'lg', 'xl'],
+    factor: 2, // Adjust the factor based on your needs
+  }
+);
 
 export default theme;

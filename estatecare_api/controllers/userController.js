@@ -42,7 +42,8 @@ exports.register = async(req, res) => {
 
 // Login user endpoint
 exports.login = async(req, res) => {
-    const { email, password } = req.body;
+    // const { email, password } = req.body;
+    const { email, password, rememberMe } = req.body; // Add rememberMe to the body destructuring
 
     try {
         const user = await User.findOne({ email });
@@ -50,13 +51,17 @@ exports.login = async(req, res) => {
         if (!user || !(await user.matchPassword(password))) {
             return res.status(401).json({ message: 'Invalid credentials' });
         }
+        
+        // Adjust token expiration based on rememberMe
+        const accessTokenExpiry = '15m'; // Example: 15 minutes for access token
+        const refreshTokenExpiry = rememberMe ? '12h' : '7d'; // Example: 30 days if rememberMe is true, else 7 days
 
-        const accessToken = generateToken(user._id, user.role, process.env.JWT_SECRET, '15m');
-        const refreshToken = generateToken(user._id, user.role, process.env.JWT_REFRESH_SECRET, '7d');
+        const accessToken = generateToken(user._id, user.role, process.env.JWT_SECRET, accessTokenExpiry);
+        const refreshToken = generateToken(user._id, user.role, process.env.JWT_REFRESH_SECRET, refreshTokenExpiry);
 
         await Token.create({ userId: user._id, token: refreshToken });
 
-        res.json({
+        res.status(200).json({
             _id: user._id,
             name: user.name,
             email: user.email,
@@ -64,6 +69,7 @@ exports.login = async(req, res) => {
             accessToken,
             refreshToken,
         });
+        console.log('Login successful');
     } catch (error) {
         res.status(500).json({ message: 'Server error' });
     }
@@ -86,7 +92,7 @@ exports.refreshToken = async(req, res) => {
     const { token: refreshToken } = req.body;
 
     if (!refreshToken) {
-        return res.status(401).json({ message: 'Refresh token error : No token provided' });
+        return res.status(401).json({ message: 'Refreshing token error : No token provided' });
     }
 
     try {
@@ -100,7 +106,7 @@ exports.refreshToken = async(req, res) => {
 
         const newAccessToken = generateToken(user._id, user.role, process.env.JWT_SECRET, '15m');
 
-        // // ** if you want to regenrate a new refresh token
+        // ** if you want to regenrate a new refresh token
         const newRefreshToken = generateToken(user._id, user.role, process.env.JWT_REFRESH_SECRET, '7d');
 
         // update the refresh token in the database
@@ -117,4 +123,21 @@ exports.refreshToken = async(req, res) => {
             message: `Invalid refresh token : ${error}`
         });
     }
+};
+
+// api endpoint to calidate a token
+exports.validateToken = async(req, res) => {
+    // Since the protect middleware has already validated the token and populated req.user,
+    // we can directly return the user information.
+    const user = req.user; // User information is already added to req.user by the protect middleware
+
+    res.json({
+        isValid: true,
+        user: {
+            _id: user._id,
+            name: user.name,
+            email: user.email,
+            role: user.role,
+        },
+    });
 };

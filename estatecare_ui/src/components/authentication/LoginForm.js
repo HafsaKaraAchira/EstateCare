@@ -11,24 +11,33 @@ import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import Typography from '@mui/material/Typography';
-import { Paper } from '@mui/material';
+import { Paper, Alert } from '@mui/material'; // Import the Alert component
 import InputAdornment from '@mui/material/InputAdornment';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import LockIcon from '@mui/icons-material/Lock';
-
-// import defaultTheme from '../styles/theme.js';
+import AdminsContactsDialog from './AdminsContactsDialog.js';
 
 const LoginForm = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [rememberMe, setRememberMe] = useState(false); // State to manage checkbox
     const navigate = useNavigate();
-    const { login } = useAuth();
+    const { login, loginError } = useAuth();
+    // Add state to control the visibility of the ContactAdminsDialog
+    const [openContactDialog, setOpenContactDialog] = useState(false);
+
+    const handleOpenContactDialog = () => {
+        setOpenContactDialog(true);
+    };
 
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
-            await login(email, password);
-            navigate('/dashboard');
+            await login(email, password, rememberMe)
+                .then(() => {
+                    if (!loginError)
+                        navigate('/dashboard');
+                });
         } catch (err) {
             console.error('Login failed', err);
         }
@@ -57,25 +66,37 @@ const LoginForm = () => {
                     gap: '0.5rem',
                 }}
             >
-                <Avatar 
-                    sx={{ 
+                <Avatar
+                    sx={{
                         mb: 5,
                         bgcolor: 'secondary.main',
                         width: 56,
                         height: 56,
                     }}
                 >
-                    <HomeOutlinedIcon 
+                    <HomeOutlinedIcon
                         sx={{
                             width: '100%',
                             height: '100%',
                         }}
                     />
                 </Avatar>
-                <Typography component="h1" variant="h4" sx={{ color: 'primary.main',fontWeight: 'bold' }}>
+                <Typography component="h1" variant="h4" sx={{ color: 'primary.main', fontWeight: 'bold' }}>
                     Hi, Welcome back!
                 </Typography>
                 <Typography variant="subtitle2">Enter your credentials to access your personal dashboard</Typography>
+                {loginError && <Alert
+                    severity="error"
+                    sx={{
+                        bgcolor: 'background.paper', // Use theme colors
+                        border: '1px solid',
+                        borderColor: 'primary.main', // Use theme colors
+                        mb: 2, // Margin bottom
+                        // Add more styles as needed
+                    }}
+                >
+                    Error: {loginError.message}
+                </Alert>}
                 <Box component="form" noValidate onSubmit={handleLogin} sx={{ mt: 1 }}>
                     <TextField
                         margin="normal"
@@ -92,9 +113,9 @@ const LoginForm = () => {
                         InputProps={{
                             startAdornment: (
                                 <InputAdornment position="start">
-                                  <AccountCircle />
+                                    <AccountCircle />
                                 </InputAdornment>
-                              )
+                            )
                         }}
                     />
                     <TextField
@@ -112,9 +133,9 @@ const LoginForm = () => {
                         InputProps={{
                             startAdornment: (
                                 <InputAdornment position="start">
-                                  <LockIcon />
+                                    <LockIcon />
                                 </InputAdornment>
-                              )
+                            )
                         }}
                     />
                     <Grid container
@@ -125,7 +146,11 @@ const LoginForm = () => {
                     >
                         <Grid item xs>
                             <FormControlLabel
-                                control={<Checkbox value="remember" color="secondary" />}
+                                control={<Checkbox checked={rememberMe}
+                                    onChange={(e) => setRememberMe(e.target.checked)}
+                                    value="remember" color="secondary"
+                                />
+                                }
                                 label="Keep me logged in"
                             />
                         </Grid>
@@ -145,11 +170,20 @@ const LoginForm = () => {
                     </Button>
                     <Grid container>
                         <Grid item>
-                            <Link href="#" variant="body2" sx={{ textDecoration: 'none', fontWeight: 'bold', display: 'block', '&:hover': { textDecoration: 'underline' } }}>
+                            <Link href="#" variant="body2"
+                                onClick={handleOpenContactDialog}
+                                sx={{
+                                    textDecoration: 'none',
+                                    fontWeight: 'bold',
+                                    display: 'block',
+                                    '&:hover': { textDecoration: 'underline' }
+                                }}
+                            >
                                 Don't have an account? Contact admins
                             </Link>
                         </Grid>
                     </Grid>
+                    <AdminsContactsDialog open={openContactDialog} setOpen={setOpenContactDialog} />
                 </Box>
             </Box>
         </Grid>

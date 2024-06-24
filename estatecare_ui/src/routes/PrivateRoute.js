@@ -9,4 +9,16 @@ const PrivateRoute = ({ path, element }) => {
   );
 };
 
+
+// const PrivateRoute = ({ children, ...rest }) => {
+//   const isAuthenticated = !!localStorage.getItem('token');
+//   const location = useLocation();
+
+//   return isAuthenticated ? (
+//     children
+//   ) : (
+//     <Navigate to="/login" state={{ from: location }} replace />
+//   );
+// };
+
 export default PrivateRoute;

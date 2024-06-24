@@ -14,8 +14,10 @@ const main = async() => {
 
             // Create users, tenants, and cleaning sessions
             const users = createUsers();
-            const cleaningStaffIds = users.filter(user => user.role === 'cleaning_staff').map(user => user._id);
             const tenants = createTenants(propertyIds);
+
+            // Create cleaning sessions associations
+            const cleaningStaffIds = users.filter(user => user.role === 'cleaning_staff').map(user => user._id);
             const cleaningSessions = createCleaningSessions(propertyIds, cleaningStaffIds);
 
             await seedDatabase({ users, tenants, cleaningSessions }, reset = true);
